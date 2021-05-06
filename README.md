@@ -1,30 +1,54 @@
-# The Wall
+![wallbanner](https://user-images.githubusercontent.com/9698363/117360892-995b1c80-aeb9-11eb-99c0-70a8b15dd305.png)
 
-The purpose with this app is to try out and showcase a few concepts with regards to building crossover Ethereum/Dfinity (Internet Computer / IC) apps.
+The Internet Computer by Dfinity Foundation promises to create "_a limitless environment for smart contracts that run at web speed, serve web, scale, and reduce compute costs by a million times or more_".
 
-The app lets the user login to the IC by signing a message using Metamask. The goal was to make this process as straightforward (and secure) as possible.
+Ethereum apps that wants to deliver above and beyond of what is possible on chain often resorts to using regular centralised server solutions. Could off chain functionality instead run on the IC to create a mixed breed of Ethereum/IC apps - truly distributed, serverless and unstoppable?
 
-1. User signs login message using Metamask
-2. App generates a `Ed25519KeyIdentity` based on the signature hash
-3. Message hash and signature is sent to IC where the address used to sign the message is recovered and linked to the IC identity.
+The purpose with **The Wall** is to try out and showcase a few concepts with regards to building these crossover Ethereum/IC apps. A proof of concept, a demo and possibly a template to use as a starting point for more advanced apps.
 
-to generate a key and login to the Dfinity Internet Computer. Link eth address to IC account.
+### Key concepts
 
-## Install dfinity
+1. **Authentication**: Can public key cryptography already used by Ethereum be used to login to the IC?
+2. **Link eth adresses to IC identities**: If owners of eth adresses can easily prove ownership and link that verification with IC identities, that would open up many interesting app possibilites - voting, membership and other various DAO use cases.
+
+<img width="1055" src="https://user-images.githubusercontent.com/9698363/117355621-1fc03000-aeb3-11eb-9156-1c5e3ac96047.png">
+
+### The Wall
+
+The functionality of the app is super simple. Connect Metamask wallet, sign a login message, select a username. Then you can post messages to the wall.
+
+Login details:
+
+1. User signs a login message using Metamask. The login includes a hashed secret that for the purpose of this demo is set by the app. To add an extra layer of security this secret (password) coud instead be chosen by the user.
+2. App generates the `Ed25519KeyIdentity` needed to authenticate with IC based on the signature hash.
+3. Message hash and signature is sent to IC where the eth address used to sign the message is recovered and linked to the IC identity.
+
+That's it! Now, the app can interact securely with IC, and IC has verified knowledge of which eth address the user controls.
+
+## Run locally
+
+### 1. Prerequisites
+
+Make sure you have the following installed:
+
+```bash
+node
+npm
+git
+
+```
+
+### 2. Install DFINITY Canister SDK
+
+Download and install the DFINITY Canister SDK package by running the following command:
 
 ```bash
 DFX_VERSION=0.7.0-beta.6 sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
 ```
 
-git clone https://github.com/kristoferlund/ic-wall.git
-yarn
+### 3. Install Rust / Cargo
 
-dfx start
-dfx deploy
-
-## Install Rust and the `wasm32-unknown-unknown`target
-
-https://doc.rust-lang.org/cargo/getting-started/installation.html
+The app backend is written in Rust. The commands below install Rust, the package manager Cargo, etc.
 
 ```bash
 curl https://sh.rustup.rs -sSf | sh
@@ -33,47 +57,55 @@ rustup target add wasm32-unknown-unknown
 sudo apt-get -y install cmake
 cargo install ic-cdk-optimizer --root target
 export PATH="./target/bin:$PATH"
+```
+
+### 4. Clone this repo, install dependencies
+
+```bash
+git clone https://github.com/kristoferlund/ic-wall.git
+npm install
+```
+
+### 5. Run!
+
+#### Terminal 1
+
+Start Internet Computer
+
+```bash
+dfx start
+```
+
+#### Terminal 2
+
+Deploy canisters
+
+```bash
 dfx deploy
 ```
 
-```bash
-nvm use v15.1.0
-npm run export
-```
-
----
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
-
-First, run the development server:
+Run next.js frontend
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Author
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Kristofer Lund, kristofer@fmckl.se
+Telegram: @kristoferkristofer
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Contributing
 
-## Learn More
+Yes, please! Raise an issue or post a pull request.
 
-To learn more about Next.js, take a look at the following resources:
+### TODO
 
--   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
--   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[ ] Error handling all over!
+[ ] Refactor canisters - better structure, naming etc.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+MIT
