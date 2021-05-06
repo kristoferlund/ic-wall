@@ -1,11 +1,44 @@
 # The Wall
 
-A Proof of concept dApp - Use Metamask to generate an identity and login to Dfinity Internet Computer.
+The purpose with this app is to try out and showcase a few concepts with regards to building crossover Ethereum/Dfinity (Internet Computer / IC) apps.
+
+The app lets the user login to the IC by signing a message using Metamask. The goal was to make this process as straightforward (and secure) as possible.
+
+1. User signs login message using Metamask
+2. App generates a `Ed25519KeyIdentity` based on the signature hash
+3. Message hash and signature is sent to IC where the address used to sign the message is recovered and linked to the IC identity.
+
+to generate a key and login to the Dfinity Internet Computer. Link eth address to IC account.
 
 ## Install dfinity
 
 ```bash
 DFX_VERSION=0.7.0-beta.6 sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+```
+
+git clone https://github.com/kristoferlund/ic-wall.git
+yarn
+
+dfx start
+dfx deploy
+
+## Install Rust and the `wasm32-unknown-unknown`target
+
+https://doc.rust-lang.org/cargo/getting-started/installation.html
+
+```bash
+curl https://sh.rustup.rs -sSf | sh
+rustup update
+rustup target add wasm32-unknown-unknown
+sudo apt-get -y install cmake
+cargo install ic-cdk-optimizer --root target
+export PATH="./target/bin:$PATH"
+dfx deploy
+```
+
+```bash
+nvm use v15.1.0
+npm run export
 ```
 
 ---
