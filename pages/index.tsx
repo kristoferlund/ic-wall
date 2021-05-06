@@ -16,6 +16,8 @@ export default function Home() {
   const { principal } = useInternetComputer();
   const { connector } = useWeb3React();
 
+  if (typeof window === "undefined") return null;
+
   return (
     <div className="bg-green-900">
       <Head>
