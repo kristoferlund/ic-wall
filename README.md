@@ -95,6 +95,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ### Author
 
 Kristofer Lund, kristofer@fmckl.se
+
 Telegram: @kristoferkristofer
 
 ### Contributing
@@ -104,6 +105,7 @@ Yes, please! Raise an issue or post a pull request.
 ### TODO
 
 [ ] Error handling all over!
+
 [ ] Refactor canisters - better structure, naming etc.
 
 ### License
