@@ -1,0 +1,17 @@
+type Profile = record {
+    "address": text;
+    "name": text;
+    "description": text;
+};
+
+service : {
+  "getByName": (name: text) -> (Profile) query;
+  "getByPrincipal": (id: principal) -> (opt Profile) query;
+  "getOwnProfile": () -> (Profile) query;
+  "getOwnPrincipalId": () -> (principal) query;
+  "search": (q: text) -> (opt Profile) query;
+  "list": () -> (vec Profile) query;
+  "setName": (name: text) -> (Profile);
+  "setDescription": (description: text) -> (Profile);
+  "linkAddress": (message: text, signature: text) -> (Profile);
+}

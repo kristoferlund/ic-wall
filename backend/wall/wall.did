@@ -1,0 +1,9 @@
+type Post = record {
+    "user": principal;
+    "text": text;
+};
+
+service : {
+  "get": () -> (vec Post) query;
+  "write": (post: text) -> ();
+}
