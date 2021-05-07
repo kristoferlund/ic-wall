@@ -96,8 +96,10 @@ Access on [http://localhost:3000](http://localhost:3000)
 -   Deploy all canisters
 
 ```bash
+dfx deploy wall
+dfx deploy profile
 npm run export
-sudo dfx deploy
+dfx deploy ui
 ```
 
 Access on [http://localhost:8000](http://localhost:8000)
