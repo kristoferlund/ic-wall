@@ -11,6 +11,10 @@
       "candid": "backend/wall/wall.did",
       "wasm": "target/wasm32-unknown-unknown/release/wall_opt.wasm",
       "type": "custom"
+    },
+    "ui": {
+      "source": ["out"],
+      "type": "assets"
     }
   },
   "networks": {

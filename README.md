@@ -1,5 +1,4 @@
 ![wallbanner](https://user-images.githubusercontent.com/9698363/117360892-995b1c80-aeb9-11eb-99c0-70a8b15dd305.png)
-
 The Internet Computer by Dfinity Foundation promises to create "_a limitless environment for smart contracts that run at web speed, serve web, scale, and reduce compute costs by a million times or more_".
 
 Ethereum apps that wants to deliver above and beyond of what is possible on chain often resorts to using regular centralised server solutions. Could off chain functionality instead run on the IC to create a mixed breed of Ethereum/IC apps - truly distributed, serverless and unstoppable?
@@ -78,19 +77,30 @@ dfx start
 
 #### Terminal 2
 
-Deploy canisters
+**Alt 1.** Development mode with hot reload
+
+-   Deploy backend canisters
+-   Run next.js frontend in dev mode
 
 ```bash
-dfx deploy
-```
-
-Run next.js frontend
-
-```bash
+dfx deploy wall
+dfx deploy profile
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Access on [http://localhost:3000](http://localhost:3000)
+
+**Alt 2.** Production mode
+
+-   Export static production version of next.js frontend
+-   Deploy all canisters
+
+```bash
+npm run export
+sudo dfx deploy
+```
+
+Access on [http://localhost:8000](http://localhost:8000)
 
 ### Author
 
