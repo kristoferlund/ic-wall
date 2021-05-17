@@ -104,6 +104,16 @@ dfx deploy ui
 
 Access on [http://localhost:8000](http://localhost:8000)
 
+In case you receive "Could not find Canister ID from Request":
+
+-	Get UI canister ID 
+
+```bash
+dfx canister id ui
+```
+
+Access on http://localhost:8000/?canisterId={id received in previous step}
+
 ### Author
 
 Kristofer Lund, kristofer@fmckl.se
