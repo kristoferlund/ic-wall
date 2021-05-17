@@ -42,7 +42,7 @@ git
 Download and install the DFINITY Canister SDK package by running the following command:
 
 ```bash
-DFX_VERSION=0.7.0-beta.6 sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+DFX_VERSION=0.7.0-beta.8 sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
 ```
 
 ### 3. Install Rust / Cargo
@@ -106,7 +106,7 @@ Access on [http://localhost:8000](http://localhost:8000)
 
 In case you receive "Could not find Canister ID from Request":
 
--	Get UI canister ID 
+-   Get UI canister ID
 
 ```bash
 dfx canister id ui
