@@ -32,3 +32,26 @@ fn write(text: String) -> &'static Vec<Post> {
 
     get()
 }
+
+#[pre_upgrade]
+fn pre_upgrade() {
+    let wall = get();
+    storage::stable_save((wall,)).unwrap();
+    return;
+}
+
+#[post_upgrade]
+fn post_upgrade() {
+    let wall = storage::get_mut::<Wall>();
+
+    let res:Result<(Vec<Post>,), String> = storage::stable_restore();
+    match res {
+        Ok((old_posts,)) => {
+            for post in old_posts {
+                wall.push(post);
+            }
+            return;
+        }
+        Err(_) => return
+    }
+}

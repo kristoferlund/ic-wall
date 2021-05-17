@@ -45,7 +45,7 @@ fn get_by_principal(principal: Principal) -> Option<&'static Profile> {
 fn get_by_name(name: String) -> Option<&'static Profile> {
     let profile_store = storage::get::<ProfileStore>();
 
-    for (_p, profile) in profile_store.iter() {
+    for (_, profile) in profile_store.iter() {
         if profile.name.eq(&name) {
             return Some(profile);
         }
@@ -146,4 +146,33 @@ fn link_address(message: String, signature: String) -> Profile {
     _save_profile(profile.clone());
 
     return profile;
+}
+
+#[pre_upgrade]
+fn pre_upgrade() {
+    let profile_store = storage::get::<ProfileStore>();
+
+    let mut profiles: Vec<(&Principal, &Profile)> = Vec::new();
+
+    for (principal, profile) in profile_store.iter() {
+        profiles.push((principal, profile));
+        println!("Saving {:?}", profile.name);
+    }
+    storage::stable_save((profiles,)).unwrap();
+}
+
+#[post_upgrade]
+fn post_upgrade() {
+    let profile_store = storage::get_mut::<ProfileStore>();
+
+    let res:Result<(Vec<(Principal, Profile)>,), String> = storage::stable_restore();
+    match res {
+        Ok((old_profiles,)) => {
+            for profile in old_profiles {
+                profile_store.insert(profile.0, profile.1.clone());
+            }
+            return;
+        }
+        Err(_) => return
+    }
 }
