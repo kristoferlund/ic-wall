@@ -9,7 +9,6 @@ use ic_cdk_macros::*;
 use secp256k1::recover;
 use std::{collections::BTreeMap, convert::TryInto};
 
-type IdStore = BTreeMap<String, Principal>;
 type ProfileStore = BTreeMap<Principal, Profile>;
 
 #[derive(Clone, Debug, CandidType, Deserialize)]
@@ -43,14 +42,16 @@ fn get_by_principal(principal: Principal) -> Option<&'static Profile> {
 }
 
 #[query(name = "getByName")]
-fn get_by_name(name: String) -> Profile {
-    let id_store = storage::get::<IdStore>();
+fn get_by_name(name: String) -> Option<&'static Profile> {
     let profile_store = storage::get::<ProfileStore>();
 
-    id_store
-        .get(&name)
-        .and_then(|id| profile_store.get(id).cloned())
-        .unwrap_or_else(|| Profile::default())
+    for (_p, profile) in profile_store.iter() {
+        if profile.name.eq(&name) {
+            return Some(profile);
+        }
+    }
+
+    None
 }
 
 #[query(name = "getOwnProfile")]
@@ -99,10 +100,8 @@ fn list() -> Vec<&'static Profile> {
 fn _save_profile(profile: Profile) -> () {
     let principal_id = ic_cdk::caller();
 
-    let id_store = storage::get_mut::<IdStore>();
     let profile_store = storage::get_mut::<ProfileStore>();
 
-    id_store.insert(profile.name.clone(), principal_id.clone());
     profile_store.insert(principal_id, profile.clone());
 }
 

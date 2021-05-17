@@ -5,7 +5,7 @@ type Profile = record {
 };
 
 service : {
-  "getByName": (name: text) -> (Profile) query;
+  "getByName": (name: text) -> (opt Profile) query;
   "getByPrincipal": (id: principal) -> (opt Profile) query;
   "getOwnProfile": () -> (Profile) query;
   "getOwnPrincipalId": () -> (principal) query;
