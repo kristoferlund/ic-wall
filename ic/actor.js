@@ -7,6 +7,9 @@ export function createActors(identity) {
     host: process.env.NEXT_PUBLIC_IC_HOST,
     identity,
   });
+  if (process.env.NODE_ENV === "development") {
+    agent.fetchRootKey();
+  }
   const actors = {
     profile: Actor.createActor(profile.idlFactory, {
       agent,
@@ -24,6 +27,9 @@ export function createAnonymousActors() {
   const agent = new HttpAgent({
     host: process.env.NEXT_PUBLIC_IC_HOST,
   });
+  if (process.env.NODE_ENV === "development") {
+    agent.fetchRootKey();
+  }
   const actors = {
     profile: Actor.createActor(profile.idlFactory, {
       agent,
