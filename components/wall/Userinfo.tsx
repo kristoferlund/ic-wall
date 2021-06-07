@@ -1,4 +1,4 @@
-import type { Principal } from "@dfinity/agent";
+import type { Principal } from "@dfinity/principal";
 
 import { createAnonymousActors } from "@/ic/actor";
 import { getUserProfile } from "@/store/actions/profile";
