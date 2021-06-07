@@ -1,16 +1,9 @@
-import React, {
-  useState,
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useContext,
-  useCallback,
-} from "react";
+import React, { useState, createContext, useContext, useCallback } from "react";
 
 import { useWeb3React } from "@web3-react/core";
 
 import { Ed25519KeyIdentity } from "@dfinity/identity";
-import type { Principal } from "@dfinity/agent";
+import type { Principal } from "@dfinity/principal";
 
 import { createActors } from "./actor";
 import { loadSavedIdentity } from "./identity";
@@ -36,9 +29,8 @@ export const ICContextDefaults: IC = {
 export const ICContext = createContext<IC>(ICContextDefaults);
 
 export function useICContextValues(): IC {
-  const [identity, _setIdentity] = useState<Ed25519KeyIdentity | undefined>(
-    undefined
-  );
+  const [identity, _setIdentity] =
+    useState<Ed25519KeyIdentity | undefined>(undefined);
   const [actors, _setActors] = useState<any | undefined>(undefined);
   const [principal, _setPrincipal] = useState<Principal | undefined>(undefined);
 
