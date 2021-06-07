@@ -2,6 +2,7 @@ import React from "react";
 
 import { useWeb3React } from "@web3-react/core";
 import { utils } from "ethers";
+import toast from "react-hot-toast";
 
 import { linkAddress } from "@/ic/actor";
 import { isConnected } from "@/eth/connectors";
@@ -47,6 +48,7 @@ export default function Component() {
 
     // 3. Generate Ed25519KeyIdentity based on signature
     const identity = generateEd25519KeyIdentity(signature);
+    toast.success("Internet Computer Identity generated", { duration: 4000 });
 
     // 4. Use the new identity when communicating with IC
     icSetIdentity(identity);
@@ -57,7 +59,6 @@ export default function Component() {
     icSaveIdentity(ethAccount!, identity);
 
     // 6. Create actors to interact with IC
-
     // const actors = createActors(identity);
 
     // 7. Link current eth address to identity. The login message hash and
@@ -70,6 +71,7 @@ export default function Component() {
     // Beta workaround, call actor from JS instead of TS because of call
     // signature error
     linkAddress(identity, loginMessageHash, signature);
+    toast.success("Linked eth address to Identity", { duration: 4000 });
   };
 
   return (
