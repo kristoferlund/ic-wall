@@ -1,3 +1,4 @@
+**Update 2021-06-09:** Project updated to use dfx 0.7.1 and js libs v0.9.0
 ![wallbanner](https://user-images.githubusercontent.com/9698363/117360892-995b1c80-aeb9-11eb-99c0-70a8b15dd305.png)
 The Internet Computer by Dfinity Foundation promises to create "_a limitless environment for smart contracts that run at web speed, serve web, scale, and reduce compute costs by a million times or more_".
 
