@@ -20,6 +20,7 @@ export default function Component() {
   const [finished, setFinished] = React.useState(false);
 
   const handlePostChange = (event: React.FormEvent<HTMLInputElement>) => {
+    if (event.currentTarget.value.length > 255) return;
     setPost(event.currentTarget.value);
   };
 

@@ -29,6 +29,7 @@ export default function Component() {
   if (profileResult?.payload?.name) return null;
 
   const handleNameChange = (event: React.FormEvent<HTMLInputElement>) => {
+    if (event.currentTarget.value.length > 25) return;
     setName(event.currentTarget.value);
   };
 

@@ -27,7 +27,7 @@ export default function Component() {
         .reverse()
         .map((post) => (
           <div className="mb-5 text-center">
-            <div className="p-5 mb-2 text-white bg-green-800 rounded-lg">
+            <div className="p-5 mb-2 overflow-hidden text-white bg-green-800 rounded-lg">
               {post.text}
             </div>
             <Userinfo principal={post.user} />
