@@ -25,6 +25,7 @@
     "@web3-react/core": "latest",
     "@web3-react/injected-connector": "latest",
     "ethers": "^5.1.4",
+    "linkifyjs": "^3.0.0-beta.3",
     "next": "10.1.3",
     "pullstate": "^1.22.1",
     "react": "17.0.2",

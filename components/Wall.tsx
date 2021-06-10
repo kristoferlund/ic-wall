@@ -3,6 +3,8 @@ import React from "react";
 import { getWall } from "@/store/actions/wall";
 import { createAnonymousActors } from "@/ic/actor";
 
+import Linkify from "linkifyjs/react";
+
 import Userinfo from "@/components/wall/Userinfo";
 
 export default function Component() {
@@ -28,7 +30,14 @@ export default function Component() {
         .map((post) => (
           <div className="mb-5 text-center">
             <div className="p-5 mb-2 overflow-hidden text-white bg-green-800 rounded-lg">
-              {post.text}
+              <Linkify
+                options={{
+                  className: "underline hover:text-yellow-200",
+                  target: "_blank",
+                }}
+              >
+                {post.text}
+              </Linkify>
             </div>
             <Userinfo principal={post.user} />
           </div>
