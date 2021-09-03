@@ -3,6 +3,7 @@
 -   Every user gets their own wall! Click on any username or address to filter the wall.
 -   Post timestamps displayed
 -   Project updated to use dfx 0.8.0 and js libs v0.10.0
+-   Switch of UI platform, from Next.js to Create React App
 
 ### The Wall is live on IC mainnet!
 
