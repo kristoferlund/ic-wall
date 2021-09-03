@@ -1,4 +1,4 @@
-import { Post } from "@dfx/local/canisters/wall/wall.did";
+import { Post } from "@/ic/canisters_generated/wall/wall.did";
 import { createAsyncAction, errorResult, successResult } from "pullstate";
 
 export const getWall = createAsyncAction(async ({ actors, filter }) => {

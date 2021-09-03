@@ -1,3 +1,5 @@
+import * as Profile from "@/ic/canisters_generated/profile";
+import * as Wall from "@/ic/canisters_generated/wall";
 import {
   Actor,
   ActorConfig,
@@ -5,8 +7,6 @@ import {
   HttpAgentOptions,
   Identity,
 } from "@dfinity/agent";
-import * as Profile from "@dfx/local/canisters/profile";
-import * as Wall from "@dfx/local/canisters/wall";
 
 export const createActor = (
   canisterId: string,

@@ -6,6 +6,7 @@ import UserInfo from "@/components/wall/UserInfo";
 import WelcomeToast from "@/components/wall/WelcomeToast";
 import WritePost from "@/components/wall/WritePost";
 import { isConnected } from "@/eth/connectors";
+import { Post as PostInterface } from "@/ic/canisters_generated/wall/wall.did";
 import { useInternetComputer } from "@/ic/context";
 import {
   getPrincipalByEth,
@@ -16,7 +17,6 @@ import { GlobalWallState } from "@/store/store";
 import { ReactComponent as DfinityIcon } from "@/svg/dfinity.svg";
 import { ReactComponent as MetamaskIcon } from "@/svg/metamask.svg";
 import { Principal } from "@dfinity/principal";
-import { Post as PostInterface } from "@dfx/local/canisters/wall/wall.did";
 import { useWeb3React } from "@web3-react/core";
 import React from "react";
 import { useBottomScrollListener } from "react-bottom-scroll-listener";

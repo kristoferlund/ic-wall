@@ -1,9 +1,9 @@
+import { Profile } from "@/ic/canisters_generated/profile/profile.did";
+import { Post } from "@/ic/canisters_generated/wall/wall.did";
 import { useInternetComputer } from "@/ic/context";
 import { getProfileByPrincipal } from "@/store/actions/profile";
 import { ReactComponent as UserIcon } from "@/svg/user-solid.svg";
 import { Principal } from "@dfinity/principal";
-import { Profile } from "@dfx/local/canisters/profile/profile.did";
-import { Post } from "@dfx/local/canisters/wall/wall.did";
 import { Jazzicon } from "@ukstv/jazzicon-react";
 import formatDistance from "date-fns/formatDistance";
 import { Link } from "react-router-dom";

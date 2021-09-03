@@ -1,5 +1,5 @@
+import { Profile } from "@/ic/canisters_generated/profile/profile.did";
 import { createAsyncAction, errorResult, successResult } from "pullstate";
-import { Profile } from "@dfx/local/canisters/profile/profile.did";
 
 export const getOwnProfile = createAsyncAction(async ({ actors, account }) => {
   const result: Profile = await actors.profile.getOwnProfile();

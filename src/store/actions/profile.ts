@@ -1,5 +1,5 @@
+import { Profile } from "@/ic/canisters_generated/profile/profile.did";
 import { Principal } from "@dfinity/principal";
-import { Profile } from "@dfx/local/canisters/profile/profile.did";
 import { createAsyncAction, errorResult, successResult } from "pullstate";
 
 export const getProfileByPrincipal = createAsyncAction(

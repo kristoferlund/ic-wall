@@ -1,4 +1,4 @@
-import { Post as PostInterface } from "@dfx/local/canisters/wall/wall.did";
+import { Post as PostInterface } from "@/ic/canisters_generated/wall/wall.did";
 import Linkify from "linkifyjs/react";
 import PostMeta from "./PostMeta";
 

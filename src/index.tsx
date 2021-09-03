@@ -24,20 +24,22 @@ const ICCtx = (props: any) => {
 };
 
 ReactDOM.render(
-  <Web3ReactProvider getLibrary={getLibrary}>
-    <ICCtx>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <Wall />
-          </Route>
-          <Route path="/:urlEthAccount">
-            <UserWall />
-          </Route>
-        </Switch>
-      </Router>
-    </ICCtx>
-  </Web3ReactProvider>,
+  <React.StrictMode>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <ICCtx>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Wall />
+            </Route>
+            <Route path="/:urlEthAccount">
+              <UserWall />
+            </Route>
+          </Switch>
+        </Router>
+      </ICCtx>
+    </Web3ReactProvider>
+  </React.StrictMode>,
 
   document.getElementById("root")
 );

@@ -33,8 +33,8 @@
     "react-scripts": "4.0.3"
   },
   "scripts": {
-    "start": "TAILWIND_MODE=watch craco start",
-    "build": "craco build",
+    "start": "make copy_dfx_generated & TAILWIND_MODE=watch craco start",
+    "build": "make copy_dfx_generated & craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

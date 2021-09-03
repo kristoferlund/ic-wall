@@ -1,7 +1,7 @@
 import Spinner from "@/components/wall/Spinner";
+import { Profile } from "@/ic/canisters_generated/profile/profile.did";
 import { useInternetComputer } from "@/ic/context";
 import { getProfileByPrincipal } from "@/store/actions/profile";
-import { Profile } from "@dfx/local/canisters/profile/profile.did";
 import React from "react";
 
 export default function SetUsername() {
