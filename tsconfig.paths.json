@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["/*"],
+      "@/components/*": ["components/*"],
+      "@/ic/*": ["ic/*"],
+      "@/eth/*": ["eth/*"],
+      "@/store/*": ["store/*"],
+      "@/svg/*": ["svg/*"],
+      "@dfx/*": ["../.dfx/*"]
+    }
+  }
+}

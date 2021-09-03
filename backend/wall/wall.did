@@ -1,9 +1,11 @@
 type Post = record {
-    "user": principal;
+    "id": int;
+    "timestamp": int;
+    "user_id": text;
     "text": text;
 };
 
 service : {
-  "get": () -> (vec Post) query;
+  "wall": (filter: text) -> (vec Post) query;
   "write": (post: text) -> ();
 }

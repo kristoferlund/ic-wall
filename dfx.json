@@ -13,7 +13,7 @@
       "type": "custom"
     },
     "ui": {
-      "source": ["out"],
+      "source": ["build"],
       "type": "assets"
     }
   },
@@ -23,6 +23,6 @@
       "type": "ephemeral"
     }
   },
-  "dfx": "0.7.1",
+  "dfx": "0.8.0",
   "version": 1
 }

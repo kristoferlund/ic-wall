@@ -6,7 +6,7 @@ use ic_cdk::export::{
 use ic_cdk::println;
 use ic_cdk::*;
 use ic_cdk_macros::*;
-use secp256k1::recover;
+use libsecp256k1::recover;
 use std::{collections::BTreeMap, convert::TryInto};
 
 type ProfileStore = BTreeMap<Principal, Profile>;
@@ -28,7 +28,8 @@ impl Default for Profile {
     }
 }
 
-#[query(name = "getByPrincipal")]
+
+#[query(name = "getProfileByPrincipal")]
 fn get_by_principal(principal: Principal) -> Option<&'static Profile> {
     let profile_store = storage::get::<ProfileStore>();
 
@@ -41,7 +42,20 @@ fn get_by_principal(principal: Principal) -> Option<&'static Profile> {
     None
 }
 
-#[query(name = "getByName")]
+#[query(name = "getProfileByEth")]
+fn get_by_eth(eth_address: String) -> Option<&'static Profile> {
+    let profile_store = storage::get::<ProfileStore>();
+
+    for (_, profile) in profile_store.iter() {
+        if profile.address.eq(&eth_address) {
+            return Some(profile);
+        }
+    }
+
+    None
+}
+
+#[query(name = "getProfileByName")]
 fn get_by_name(name: String) -> Option<&'static Profile> {
     let profile_store = storage::get::<ProfileStore>();
 
@@ -65,9 +79,23 @@ fn get_own_profile() -> Profile {
         .unwrap_or_else(|| Profile::default())
 }
 
-#[query(name = "getOwnPrincipalId")]
+
+#[query(name = "getOwnPrincipal")]
 fn get_own_principal_id() -> Principal {
     ic_cdk::caller()
+}
+
+#[query(name = "getPrincipalByEth")]
+fn get_principal_by_eth(eth_address: String) -> Option<Principal> {
+    let profile_store = storage::get::<ProfileStore>();
+
+    for (principal, profile) in profile_store.iter() {
+        if profile.address.to_lowercase().eq(&eth_address.to_lowercase()) {
+            return Some(*principal);
+        }
+    }
+
+    None
 }
 
 #[query]
@@ -75,9 +103,9 @@ fn search(text: String) -> Option<&'static Profile> {
     let text = text.to_lowercase();
     let profile_store = storage::get::<ProfileStore>();
 
-    for (_, p) in profile_store.iter() {
-        if p.name.to_lowercase().contains(&text) || p.description.to_lowercase().contains(&text) {
-            return Some(p);
+    for (_, profile) in profile_store.iter() {
+        if profile.name.to_lowercase().contains(&text) || profile.description.to_lowercase().contains(&text) {
+            return Some(profile);
         }
     }
 
@@ -90,8 +118,8 @@ fn list() -> Vec<&'static Profile> {
 
     let mut profiles: Vec<&'static Profile> = Vec::new();
 
-    for (_, p) in profile_store.iter() {
-        profiles.push(p);
+    for (_, profile) in profile_store.iter() {
+        profiles.push(profile);
     }
 
     return profiles;
@@ -125,13 +153,13 @@ fn set_description(description: String) -> Profile {
 fn link_address(message: String, signature: String) -> Profile {
     let mut signature_bytes = hex::decode(signature.trim_start_matches("0x")).unwrap();
     let recovery_byte = signature_bytes.pop().expect("No recovery byte");
-    let recovery_id = secp256k1::RecoveryId::parse_rpc(recovery_byte).unwrap();
+    let recovery_id = libsecp256k1::RecoveryId::parse_rpc(recovery_byte).unwrap();
     let signature_slice = signature_bytes.as_slice();
     let signature_bytes: [u8; 64] = signature_slice.try_into().unwrap();
-    let signature = secp256k1::Signature::parse(&signature_bytes);
+    let signature = libsecp256k1::Signature::parse_standard(&signature_bytes).unwrap();
     let message_bytes = hex::decode(message.trim_start_matches("0x")).unwrap();
     let message_bytes: [u8; 32] = message_bytes.try_into().unwrap();
-    let message = secp256k1::Message::parse(&message_bytes);
+    let message = libsecp256k1::Message::parse(&message_bytes);
     let key = recover(&message, &signature, &recovery_id).unwrap();
     let key_bytes = key.serialize();
     let keccak256 = raw_keccak256(key_bytes[1..].to_vec());
@@ -142,7 +170,7 @@ fn link_address(message: String, signature: String) -> Profile {
     println!("Linked eth address {:?}", address);
 
     let mut profile = get_own_profile();
-    profile.address = address.clone();
+    profile.address = address.to_lowercase().clone();
     _save_profile(profile.clone());
 
     return profile;
@@ -156,7 +184,6 @@ fn pre_upgrade() {
 
     for (principal, profile) in profile_store.iter() {
         profiles.push((principal, profile));
-        println!("Saving {:?}", profile.name);
     }
     storage::stable_save((profiles,)).unwrap();
 }

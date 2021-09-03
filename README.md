@@ -1,7 +1,12 @@
-**Update 2021-06-09:**
+**Update 2021-09-03:**
 
--   Project updated to use dfx 0.7.1 and js libs v0.9.0
--   🥳 Demo is live on IC mainnet! Try it here 👉 https://rivyl-6aaaa-aaaaf-qaapq-cai.raw.ic0.app/
+-   Every user gets their own wall! Click on any username or address to filter the wall.
+-   Post timestamps displayed
+-   Project updated to use dfx 0.8.0 and js libs v0.10.0
+
+### The Wall is live on IC mainnet!
+
+👉 👉 👉 https://rivyl-6aaaa-aaaaf-qaapq-cai.raw.ic0.app/
 
 ![wallbanner](https://user-images.githubusercontent.com/9698363/117360892-995b1c80-aeb9-11eb-99c0-70a8b15dd305.png)
 The Internet Computer by Dfinity Foundation promises to create "_a limitless environment for smart contracts that run at web speed, serve web, scale, and reduce compute costs by a million times or more_".
@@ -12,14 +17,14 @@ The purpose with **The Wall** is to try out and showcase a few concepts with reg
 
 ### Key concepts
 
-1. **Authentication**: Can public key cryptography already used by Ethereum be used to login to the IC?
-2. **Link eth adresses to IC identities**: If owners of eth adresses can easily prove ownership and link that verification with IC identities, that would open up many interesting app possibilites - voting, membership and other various DAO use cases.
+1. **Authentication**: Use the Ethereum public key cryptography to generate a key and login to the IC.
+2. **Link eth adress to IC identity**: The link between Ethereum address and IC facilitates the use of IC as a Layer 2 scaling solution and off chain application platform.
 
 <img width="1055" src="https://user-images.githubusercontent.com/9698363/117355621-1fc03000-aeb3-11eb-9156-1c5e3ac96047.png">
 
 ### The Wall
 
-The functionality of the app is super simple. Connect Metamask wallet, sign a login message, select a username. Then you can post messages to the wall.
+The functionality of the app is super simple. Connect Metamask wallet, sign a login message, select a username. Then write the wall! It's like Twitter on speed but the other way around - most functionality you love is missing. Plus it's slow.
 
 Login details:
 
@@ -39,7 +44,6 @@ Make sure you have the following installed:
 node
 npm
 git
-
 ```
 
 ### 2. Install DFINITY Canister SDK
@@ -47,7 +51,7 @@ git
 Download and install the DFINITY Canister SDK package by running the following command:
 
 ```bash
-DFX_VERSION=0.7.1 sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
 ```
 
 ### 3. Install Rust / Cargo
@@ -82,28 +86,40 @@ dfx start
 
 #### Terminal 2
 
-**Alt 1.** Development mode with hot reload
-
--   Deploy backend canisters
--   Run next.js frontend in dev mode
+##### 1. Deploy backend canisters
 
 ```bash
 dfx deploy wall
 dfx deploy profile
-npm run dev
+```
+
+##### 2. Set ENV to help frontend find the deployed canisters.
+
+Make a copy of the `.env.template` file and name it `.env.development`. Update the file with canister IDs from the previous step. This is one time edit, any subsequent canister deploys will not change the IDs.
+
+```env
+REACT_APP_IC_APP_NAME=ic-wall
+REACT_APP_IC_HOST=http://127.0.0.1:8000/
+REACT_APP_PROFILE_CANISTER_ID=(CANISTER ID HERE)
+REACT_APP_WALL_CANISTER_ID=(CANISTER ID HERE)
+```
+
+##### 3. Start frontend.
+
+**Alt 1.** Development mode with hot reload
+
+```bash
+npm run start
 ```
 
 Access on [http://localhost:3000](http://localhost:3000)
 
 **Alt 2.** Production mode
 
--   Export static production version of next.js frontend
--   Deploy all canisters
+Export static production version of frontend and let dfx serve the files.
 
 ```bash
-dfx deploy wall
-dfx deploy profile
-npm run export
+npm run build
 dfx deploy ui
 ```
 
@@ -131,8 +147,8 @@ Yes, please! Raise an issue or post a pull request.
 
 ### TODO
 
+[ ] UI fixes to better handle the slow IC load speed that causes flickering components etc.
 [ ] Error handling all over!
-
 [ ] Refactor canisters - better structure, naming etc.
 
 ### License
