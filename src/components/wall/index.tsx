@@ -1,3 +1,4 @@
+import Spinner from "@/components/Spinner";
 import { Post as PostInterface } from "@/ic/canisters_generated/wall/wall.did";
 import { WallPageQuery, WallRefreshTimestamp } from "@/store/wall";
 import { Principal } from "@dfinity/principal";
@@ -9,6 +10,14 @@ import Post from "./post";
 interface Props {
   userId?: Principal;
 }
+
+const Loading = () => {
+  return (
+    <div className="pt-5 text-center">
+      <Spinner />
+    </div>
+  );
+};
 
 export const WallPosts = ({ userId }: Props) => {
   const [hasMorePosts, setHasMorePosts] = React.useState(true);
@@ -47,6 +56,7 @@ export const WallPosts = ({ userId }: Props) => {
       {wall.map((post) => (
         <Post key={post.id.toString()} data={post} />
       ))}
+      {wallLoadable.state === "loading" && <Loading />}
     </>
   );
 };
