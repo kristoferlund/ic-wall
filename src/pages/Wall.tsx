@@ -1,164 +1,101 @@
-import Header from "@/components/Header";
-import Post from "@/components/wall/post";
-import SetUsername from "@/components/wall/SetUsername";
-import Spinner from "@/components/wall/Spinner";
+import Spinner from "@/components/Spinner";
+import { EmptyWallMessage, WallPosts } from "@/components/wall";
+import { SetUsernameIfNone } from "@/components/wall/SetUsername";
 import WelcomeToast from "@/components/wall/WelcomeToast";
-import WritePost from "@/components/wall/WritePost";
+import { WritePostIfUsername } from "@/components/wall/WritePost";
 import { isConnected } from "@/eth/connectors";
-import { Post as PostInterface } from "@/ic/canisters_generated/wall/wall.did";
 import { useInternetComputer } from "@/ic/context";
-import { getProfileByPrincipal } from "@/store/actions/profile";
-import { getWall } from "@/store/actions/wall";
-import { GlobalWallState } from "@/store/store";
+import { WelcomeToastShown } from "@/store/index";
 import { ReactComponent as DfinityIcon } from "@/svg/dfinity.svg";
 import { ReactComponent as MetamaskIcon } from "@/svg/metamask.svg";
 import { useWeb3React } from "@web3-react/core";
 import React from "react";
-import { useBottomScrollListener } from "react-bottom-scroll-listener";
 import toast, { Toaster } from "react-hot-toast";
-import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
 
-const PAGESIZE = 25;
+const Loading = () => {
+  return (
+    <div className="pt-5 text-center">
+      <Spinner />
+    </div>
+  );
+};
 
-export default function Home() {
+export default function Wall() {
   const ic = useInternetComputer();
   const { connector } = useWeb3React();
-  const location = useLocation();
 
-  const [wall, setWall] = React.useState<Array<PostInterface> | undefined>(
-    undefined
-  );
-  const [pageNumber, setPageNumber] = React.useState<number>(1);
+  const [loadPause, setLoadPause] = React.useState(true);
 
-  const [stateResetPause, setStateResetPause] = React.useState<boolean>(false);
-  const [getWallFinished, wallResult, getWallLoading] = getWall.useBeckon(
-    {
-      actors: ic.actors,
-      filter: { page: pageNumber },
-    },
-    { dormant: stateResetPause }
-  );
-  const [noMorePosts, setNoMorePosts] = React.useState<boolean>(false);
+  const [welcomeToastShown, setWelcomeToastShown] =
+    useRecoilState(WelcomeToastShown);
 
-  const nextPage = () => {
-    if (!stateResetPause && !noMorePosts) {
-      setPageNumber((n) => n + 1);
-    }
-  };
-  useBottomScrollListener(nextPage, { debounce: 2000 });
+  React.useEffect(() => {
+    const t = setTimeout(() => {
+      setLoadPause(false);
+    }, 1000);
+    return () => {
+      clearTimeout(t);
+    };
+  }, []);
 
-  const [profileFinished, profileResult] = getProfileByPrincipal.useBeckon({
-    actors: ic.actors,
-    principal: ic.principal,
-  });
-
-  const welcomeToastShown = GlobalWallState.useState(
-    (s) => s.welcomeToastShown
-  );
   React.useEffect(() => {
     if (!welcomeToastShown) {
       toast(<WelcomeToast />, {
         duration: 20000,
       });
-      GlobalWallState.update((s) => {
-        s.welcomeToastShown = !welcomeToastShown;
-      });
+      setWelcomeToastShown(true);
     }
-  }, [welcomeToastShown]);
-
-  // Reset wall on page switch
-  React.useEffect(() => {
-    setStateResetPause(true);
-    setTimeout(() => {
-      setStateResetPause(false);
-    }, 1000);
-    setPageNumber(1);
-    setNoMorePosts(false);
-    setWall(undefined);
-  }, [location.pathname]);
-
-  React.useEffect(() => {
-    if (!wallResult || wallResult.error) return;
-    if (wallResult.payload.length < PAGESIZE) setNoMorePosts(true);
-    if (pageNumber === 1) {
-      setWall(wallResult.payload);
-    } else {
-      setWall((w) => (w ? w.concat(wallResult.payload) : wallResult.payload));
-    }
-  }, [getWallFinished, wallResult, pageNumber]);
+  }, [welcomeToastShown, setWelcomeToastShown]);
 
   return (
-    <div className="bg-green-900">
-      <Header />
-      <main>
-        <Toaster position="bottom-right" reverseOrder={true} />{" "}
-        <div className="w-full leading-normal text-white">
-          <div className="pt-40 pb-20 bg-right-top bg-no-repeat bg-contain sm:pb-32">
+    <>
+      <Toaster position="bottom-right" reverseOrder={true} />{" "}
+      <div className="w-full leading-normal text-white">
+        <div className="pt-40 pb-20 bg-right-top bg-no-repeat bg-contain sm:pb-32">
+          {!loadPause && (
             <div className="text-xl wall-container">
               {/* SET USERNAME */}
-              {!stateResetPause &&
-                ic.principal &&
-                profileFinished &&
-                !profileResult?.payload?.name && <SetUsername />}
+              <SetUsernameIfNone />
 
               {/* CONNECT METAMASK */}
-              {!stateResetPause &&
-                connector &&
-                ic.principal &&
-                !isConnected(connector) && (
-                  <div className="mb-10 text-3xl text-center">
-                    Connect
-                    <MetamaskIcon className="inline-block w-8 h-8 mx-2" />
-                    and login to
-                    <DfinityIcon className="inline-block w-8 h-8 mx-2" />
-                    to write on the wall!
-                  </div>
-                )}
+              {connector && ic.principal && !isConnected(connector) && (
+                <div className="mb-10 text-3xl text-center">
+                  Connect
+                  <MetamaskIcon className="inline-block w-8 h-8 mx-2" />
+                  and login to
+                  <DfinityIcon className="inline-block w-8 h-8 mx-2" />
+                  to write on the wall!
+                </div>
+              )}
 
               {/* LOGIN TO DFINITY */}
-              {!stateResetPause &&
-                connector &&
-                !ic.principal &&
-                isConnected(connector) && (
-                  <div className="mb-10 text-3xl text-center">
-                    Login to
-                    <DfinityIcon className="inline-block w-8 h-8 mx-2" />
-                    to write on the wall!
-                  </div>
-                )}
+              {connector && !ic.principal && isConnected(connector) && (
+                <div className="mb-10 text-3xl text-center">
+                  Login to
+                  <DfinityIcon className="inline-block w-8 h-8 mx-2" />
+                  to write on the wall!
+                </div>
+              )}
 
               {/* WRITE A POST */}
-              {!stateResetPause &&
-                wall &&
-                profileFinished &&
-                profileResult?.payload?.name && <WritePost />}
+              <WritePostIfUsername />
 
               {/* THE WALL! */}
-              {!stateResetPause && wall && (
-                <div className="pb-4">
-                  {wall.map((postData, i) => (
-                    <Post data={postData} key={i} />
-                  ))}
-                </div>
-              )}
+              <React.Suspense fallback={<Loading />}>
+                <WallPosts />
+              </React.Suspense>
 
               {/* EMPTY WALL MESSAGE */}
-              {!stateResetPause && wall && wall.length === 0 && (
-                <div className="p-5 mb-4 text-center bg-green-800 rounded-lg">
-                  The wall is empty, start filling it!
-                </div>
-              )}
-
-              {/* LOADER */}
-              {(stateResetPause || getWallLoading) && (
-                <div className="pt-5 text-center">
-                  <Spinner />
-                </div>
-              )}
+              <React.Suspense fallback={null}>
+                <EmptyWallMessage />
+              </React.Suspense>
             </div>
-          </div>
+          )}
+          {/* LOADER */}
+          {loadPause && <Loading />}
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 }

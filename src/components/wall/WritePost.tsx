@@ -1,15 +1,22 @@
-import Spinner from "@/components/wall/Spinner";
+import Spinner from "@/components/Spinner";
+import { isConnected } from "@/eth/connectors";
+import { Profile } from "@/ic/canisters_generated/profile/profile.did";
 import { useInternetComputer } from "@/ic/context";
-import { getWall } from "@/store/actions/wall";
+import { ProfileByPrincipal } from "@/store/profile";
+import { WallRefreshTimestamp } from "@/store/wall";
+import { useWeb3React } from "@web3-react/core";
 import React from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-export default function WritePost() {
+export function WritePost() {
   const { actors } = useInternetComputer();
 
   const [post, setPost] = React.useState("");
   const [success, setSuccess] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [finished, setFinished] = React.useState(false);
+
+  const setWallRefreshTimestamp = useSetRecoilState(WallRefreshTimestamp);
 
   const handlePostChange = (event: React.FormEvent<HTMLInputElement>) => {
     if (event.currentTarget.value.length > 255) return;
@@ -31,7 +38,7 @@ export default function WritePost() {
     actors.wall
       .write(post)
       .then(() => {
-        getWall.clearAllCache();
+        setWallRefreshTimestamp(Date.now());
         setSuccess(true);
       })
       .catch((error: any) => {
@@ -78,4 +85,25 @@ export default function WritePost() {
       </form>
     </div>
   );
+}
+
+export function WritePostIfUsername() {
+  const { connector, error } = useWeb3React();
+  const { principal } = useInternetComputer();
+
+  const WritePostIfUsernameInner = () => {
+    const profile = useRecoilValue(
+      ProfileByPrincipal({ principal })
+    ) as Profile;
+    if (profile?.name.length > 0) return <WritePost />;
+    return null;
+  };
+
+  if (isConnected(connector) && !error && principal)
+    return (
+      <React.Suspense fallback={null}>
+        <WritePostIfUsernameInner />
+      </React.Suspense>
+    );
+  return null;
 }

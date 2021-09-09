@@ -4,6 +4,8 @@ import { Web3ReactProvider } from "@web3-react/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { RecoilRoot } from "recoil";
+import Header from "./components/Header";
 import UserWall from "./pages/UserWall";
 import Wall from "./pages/Wall";
 import "./styles/globals.css";
@@ -25,20 +27,31 @@ const ICCtx = (props: any) => {
 
 ReactDOM.render(
   <React.StrictMode>
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <ICCtx>
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <Wall />
-            </Route>
-            <Route path="/:urlEthAccount">
-              <UserWall />
-            </Route>
-          </Switch>
-        </Router>
-      </ICCtx>
-    </Web3ReactProvider>
+    <RecoilRoot>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <ICCtx>
+          <Router>
+            <div className="bg-green-900">
+              <Header />
+              <main>
+                <Switch>
+                  <Route exact path="/">
+                    <React.Suspense fallback={null}>
+                      <Wall />
+                    </React.Suspense>
+                  </Route>
+                  <Route path="/:urlEthAccount">
+                    <React.Suspense fallback={null}>
+                      <UserWall />
+                    </React.Suspense>
+                  </Route>
+                </Switch>
+              </main>
+            </div>
+          </Router>
+        </ICCtx>
+      </Web3ReactProvider>
+    </RecoilRoot>
   </React.StrictMode>,
 
   document.getElementById("root")

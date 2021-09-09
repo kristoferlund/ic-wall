@@ -1,23 +1,21 @@
-import Spinner from "@/components/wall/Spinner";
+import Spinner from "@/components/Spinner";
+import { isConnected } from "@/eth/connectors";
 import { Profile } from "@/ic/canisters_generated/profile/profile.did";
 import { useInternetComputer } from "@/ic/context";
-import { getProfileByPrincipal } from "@/store/actions/profile";
+import { ProfileByPrincipal } from "@/store/profile";
+import { useWeb3React } from "@web3-react/core";
 import React from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-export default function SetUsername() {
+export function SetUsername() {
   const { actors, principal } = useInternetComputer();
-
+  const setProfileByPrincipal = useSetRecoilState(
+    ProfileByPrincipal({ principal })
+  );
   const [name, setName] = React.useState("");
   const [success, setSuccess] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [finished, setFinished] = React.useState(false);
-
-  React.useEffect(() => {
-    setName("");
-    setSuccess(false);
-    setLoading(false);
-    setFinished(false);
-  }, [principal]);
 
   const handleNameChange = (event: React.FormEvent<HTMLInputElement>) => {
     if (event.currentTarget.value.length > 25) return;
@@ -33,7 +31,7 @@ export default function SetUsername() {
       .setName(name)
       .then((profile: Profile) => {
         setSuccess(true);
-        getProfileByPrincipal.clearAllCache();
+        setProfileByPrincipal(profile);
       })
       .catch((error: any) => {
         console.log(error);
@@ -83,4 +81,25 @@ export default function SetUsername() {
       </div>
     </div>
   );
+}
+
+export function SetUsernameIfNone() {
+  const { connector, error } = useWeb3React();
+  const { principal } = useInternetComputer();
+
+  const SetUsernameIfNoneInner = () => {
+    const profile = useRecoilValue(
+      ProfileByPrincipal({ principal })
+    ) as Profile;
+    if (profile?.name.length === 0) return <SetUsername />;
+    return null;
+  };
+
+  if (isConnected(connector) && !error && principal)
+    return (
+      <React.Suspense fallback={null}>
+        <SetUsernameIfNoneInner />
+      </React.Suspense>
+    );
+  return null;
 }

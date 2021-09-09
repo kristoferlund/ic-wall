@@ -1,23 +1,38 @@
+import { isConnected } from "@/eth/connectors";
+import { Profile } from "@/ic/canisters_generated/profile/profile.did";
 import { useInternetComputer } from "@/ic/context";
-import { getProfileByPrincipal } from "@/store/actions/profile";
+import { ProfileByPrincipal } from "@/store/profile";
 import { ReactComponent as UserIcon } from "@/svg/user-solid.svg";
+import { useWeb3React } from "@web3-react/core";
+import React from "react";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 export default function Username() {
-  const { actors, principal } = useInternetComputer();
-  const [profileFinished, profileResult] = getProfileByPrincipal.useBeckon({
-    actors,
-    principal,
-  });
+  const { connector, error } = useWeb3React();
+  const { principal } = useInternetComputer();
 
-  if (profileFinished && profileResult?.payload?.name)
+  const UsernameInner = () => {
+    const profileResult = useRecoilValue(
+      ProfileByPrincipal({ principal })
+    ) as Profile;
+    if (profileResult?.name.length > 0)
+      return (
+        <Link to={profileResult.address}>
+          <div className="inline-block px-3 py-2 mr-4 text-base font-semibold text-white uppercase bg-green-700 rounded-lg">
+            <UserIcon className="inline-block h-4 pb-1 mr-2" />
+            {profileResult.name}
+          </div>
+        </Link>
+      );
+    return null;
+  };
+
+  if (isConnected(connector) && !error && principal)
     return (
-      <Link to={profileResult.payload.address}>
-        <div className="inline-block px-3 py-2 mr-4 text-base font-semibold text-white uppercase bg-green-700 rounded-lg">
-          <UserIcon className="inline-block h-4 pb-1 mr-2" />
-          {profileResult.payload.name}
-        </div>
-      </Link>
+      <React.Suspense fallback={null}>
+        <UsernameInner />
+      </React.Suspense>
     );
 
   return null;

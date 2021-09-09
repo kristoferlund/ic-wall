@@ -1,6 +1,6 @@
 {
   "name": "ic-wall",
-  "version": "0.0.2",
+  "version": "0.0.21",
   "private": true,
   "description": "Use Metamask to login to Internet Computer. Then, write on the wall!",
   "author": {
@@ -24,13 +24,13 @@
     "date-fns": "^2.23.0",
     "ethers": "^5.1.4",
     "linkifyjs": "^3.0.0-beta.3",
-    "pullstate": "^1.22.1",
     "react": "^17.0.2",
     "react-bottom-scroll-listener": "^5.0.0",
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.0.0",
     "react-router-dom": "^5.2.1",
-    "react-scripts": "4.0.3"
+    "react-scripts": "4.0.3",
+    "recoil": "^0.4.1"
   },
   "scripts": {
     "start": "make copy_dfx_generated & TAILWIND_MODE=watch craco start",

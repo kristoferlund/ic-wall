@@ -26,6 +26,8 @@ export const ICContextDefaults: IC = {
 export const ICContext = createContext<IC>(ICContextDefaults);
 
 export function useICContextValues(): IC {
+  const { account } = useWeb3React();
+
   const [identity, _setIdentity] = useState<Ed25519KeyIdentity | undefined>(
     undefined
   );
@@ -75,6 +77,12 @@ export function useICContextValues(): IC {
     [setIdentity, clearActiveIdentity]
   );
 
+  React.useEffect(() => {
+    if (account) {
+      loadIdentity(account);
+    }
+  }, [account, loadIdentity]);
+
   return {
     identity,
     actors,
@@ -86,15 +94,5 @@ export function useICContextValues(): IC {
 }
 
 export function useInternetComputer() {
-  const { account } = useWeb3React();
-  const icContext = useContext(ICContext);
-  React.useEffect(() => {
-    if (!account) {
-      if (icContext.identity) icContext.clearActiveIdentity();
-      return;
-    }
-    icContext.loadIdentity(account);
-  }, [account]);
-
-  return icContext;
+  return useContext(ICContext);
 }
