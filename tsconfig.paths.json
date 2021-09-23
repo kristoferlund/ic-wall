@@ -7,7 +7,9 @@
       "@/ic/*": ["ic/*"],
       "@/eth/*": ["eth/*"],
       "@/store/*": ["store/*"],
-      "@/svg/*": ["svg/*"]
+      "@/svg/*": ["svg/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/utils/*": ["utils/*"]
     }
   }
 }
