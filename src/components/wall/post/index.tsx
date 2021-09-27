@@ -1,5 +1,5 @@
 import { Post as PostInterface } from "@/ic/canisters_generated/wall/wall.did";
-import Linkify from 'linkify-react';
+import Linkify from "linkify-react";
 import { memo } from "react";
 import PostMeta from "./PostMeta";
 
