@@ -1,10 +1,13 @@
 import { isConnected } from "@/eth/connectors";
+import useENSName from "@/hooks/useENSName";
+import { shortenAddress } from "@/utils/index";
 import { Jazzicon } from "@ukstv/jazzicon-react";
 import { useWeb3React } from "@web3-react/core";
 import { Link } from "react-router-dom";
 
 export default function EthAccount() {
   const { connector, account } = useWeb3React();
+  const { ENSName } = useENSName(account ?? undefined);
 
   if (isConnected(connector) && account)
     return (
@@ -16,8 +19,7 @@ export default function EthAccount() {
           >
             <Jazzicon address={account} />
           </div>
-          {account.substring(0, 6)}...
-          {account.substring(account.length - 4)} {" "}
+          {ENSName || shortenAddress(account)}
         </div>
       </Link>
     );

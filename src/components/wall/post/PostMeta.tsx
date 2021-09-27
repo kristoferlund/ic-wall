@@ -1,6 +1,8 @@
+import useENSName from "@/hooks/useENSName";
 import { Post } from "@/ic/canisters_generated/wall/wall.did";
 import { ProfileByPrincipal } from "@/store/profile";
 import { ReactComponent as UserIcon } from "@/svg/user-solid.svg";
+import { shortenAddress } from "@/utils/index";
 import { Principal } from "@dfinity/principal";
 import { Jazzicon } from "@ukstv/jazzicon-react";
 import formatDistance from "date-fns/formatDistance";
@@ -17,6 +19,7 @@ export const PostMeta = ({ data }: Props) => {
     const profile = useRecoilValue(
       ProfileByPrincipal({ principal: Principal.fromText(data.user_id) })
     );
+    const { ENSName } = useENSName(profile?.address ?? undefined);
 
     if (profile) {
       const timestamp = parseInt(data.timestamp.toString().substr(0, 13));
@@ -34,8 +37,7 @@ export const PostMeta = ({ data }: Props) => {
             >
               <Jazzicon address={profile.address} />
             </div>
-            {profile.address.substring(0, 6)}...
-            {profile.address.substring(profile.address.length - 4)} {" "}
+            {ENSName || shortenAddress(profile.address)}
           </Link>
         </div>
       );
